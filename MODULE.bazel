@@ -23,3 +23,67 @@ use_repo(
 register_toolchains("@cue_tool_toolchains//:all")
 
 bazel_dep(name = "gazelle", version = "0.44.0", dev_dependency = True)
+
+go_deps = use_extension("@rules_go//go:extensions.bzl", "go_deps")
+
+go_deps.lockfile(
+    name = "go_deps_lock",
+)
+
+go_deps.go_repository(
+    name = "com_github_bazelbuild_bazel_gazelle",
+    importpath = "github.com/bazelbuild/bazel-gazelle",
+    version = "v0.42.0",
+    sum = "h1:BpkUzE3H2l6buJYFTKgzVMecJimQgWwYud25qVIx0SQ=",
+)
+go_deps.go_repository(
+    name = "com_github_bazelbuild_buildtools",
+    importpath = "github.com/bazelbuild/buildtools",
+    version = "v0.0.0-20240918101019-be1c24cc9a44",
+    sum = "h1:FGzENZi+SX9I7h9xvMtRA3rel8hCEfyzSixteBgn7MU=",
+)
+go_deps.go_repository(
+    name = "com_github_cockroachdb_apd_v3",
+    importpath = "github.com/cockroachdb/apd/v3",
+    version = "v3.2.1",
+    sum = "h1:U+8j7t0axsIgvQUqthuNm82HIrYXodOV2iWLWtEaIwg=",
+)
+go_deps.go_repository(
+    name = "com_github_iancoleman_strcase",
+    importpath = "github.com/iancoleman/strcase",
+    version = "v0.3.0",
+    sum = "h1:nTXanmYxhfFAMjZL34Ov6gkzEsSJZ5DbhxWjvSASxEI=",
+)
+go_deps.go_repository(
+    name = "org_cuelang_go",
+    importpath = "cuelang.org/go",
+    version = "v0.12.0",
+    sum = "h1:q4W5I+RtDIA27rslQyyt6sWkXX0YS9qm43+U1/3e0kU=",
+)
+go_deps.go_repository(
+    name = "org_golang_x_mod",
+    importpath = "golang.org/x/mod",
+    version = "v0.22.0",
+    sum = "h1:D4nJWe9zXqHOmWqj4VMOJhvzj7bEZg4wEYa759z1pH4=",
+)
+go_deps.go_repository(
+    name = "org_golang_x_sys",
+    importpath = "golang.org/x/sys",
+    version = "v0.29.0",
+    sum = "h1:TPYlXGxvx1MGTn2GiZDhnjPA9wZzZeGKHHmKhHYvgaU=",
+)
+go_deps.go_repository(
+    name = "org_golang_x_tools_go_vcs",
+    importpath = "golang.org/x/tools/go/vcs",
+    version = "v0.1.0-deprecated",
+    sum = "h1:cOIJqWBl99H1dH5LWizPa+0ImeeJq3t3cJjaeOWUAL4=",
+)
+
+use_repo(go_deps, "com_github_bazelbuild_bazel_gazelle")
+use_repo(go_deps, "com_github_bazelbuild_buildtools")
+use_repo(go_deps, "com_github_cockroachdb_apd_v3")
+use_repo(go_deps, "com_github_iancoleman_strcase")
+use_repo(go_deps, "org_cuelang_go")
+use_repo(go_deps, "org_golang_x_mod")
+use_repo(go_deps, "org_golang_x_sys")
+use_repo(go_deps, "org_golang_x_tools_go_vcs")
