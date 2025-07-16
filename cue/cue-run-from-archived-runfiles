@@ -84,7 +84,7 @@ while read -r line; do
   fi
 done < "${packageless_files_file}"
 if [ -n "${qualifier}" ]; then
-  echo >&2 "No file path followed qualifier \"${qualifier}\"." 
+  echo >&2 "No file path followed qualifier \"${qualifier}\"."
   exit 1
 fi
 
@@ -100,6 +100,8 @@ if [ -n "${module_file}" ]; then
   module_path="$(dirname $(dirname ${module_file}))"
   cd "${module_path}"
 fi
+
+export CUE_DEBUG=sortfields
 
 # NB: See https://stackoverflow.com/questions/7577052 for the odd
 # treatment of the "packageless_file_args" array variable here,

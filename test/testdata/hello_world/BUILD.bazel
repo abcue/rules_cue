@@ -1,6 +1,8 @@
+load("//cue:cmd.bzl", "cue_cmd")
 load(
     "//cue:cue.bzl",
     "cue_exported_files",
+    "cue_instance",
 )
 
 exports_files([
@@ -42,4 +44,17 @@ cue_exported_files(
     module = _MODULE,
     visibility = ["//test:__subpackages__"],
     deps = ["//test/testdata/hello_world/lang:cue_en_library"],
+)
+
+cue_instance(
+    name = "hello_tool_instance",
+    srcs = ["hello_tool.cue"],
+    ancestor = _MODULE,
+    visibility = ["//test:__subpackages__"],
+)
+
+cue_cmd(
+    name = "hello_world_cmd",
+    tool = "hello",
+    visibility = ["//test:__subpackages__"],
 )

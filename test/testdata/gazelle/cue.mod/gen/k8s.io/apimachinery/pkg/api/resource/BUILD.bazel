@@ -1,0 +1,28 @@
+load("@rules_cue//cue:cue.bzl", "cue_consolidated_instance", "cue_exported_instance", "cue_instance")
+
+cue_instance(
+    name = "resource_cue_instance",
+    package_name = "resource",
+    srcs = [
+        "amount_go_gen.cue",
+        "math_go_gen.cue",
+        "quantity_go_gen.cue",
+        "suffix_go_gen.cue",
+    ],
+    ancestor = "//test/testdata/gazelle/cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+)
+
+cue_consolidated_instance(
+    name = "resource_cue_def",
+    instance = ":resource_cue_instance",
+    output_format = "cue",
+    visibility = ["//visibility:public"],
+)
+
+cue_exported_instance(
+    name = "resource_cue_instance_exported",
+    instance = ":resource_cue_instance",
+    output_format = "json",
+    visibility = ["//visibility:public"],
+)

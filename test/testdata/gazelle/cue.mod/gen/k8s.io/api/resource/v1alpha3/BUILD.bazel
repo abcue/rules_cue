@@ -1,0 +1,34 @@
+load("@rules_cue//cue:cue.bzl", "cue_consolidated_instance", "cue_exported_instance", "cue_instance")
+
+cue_instance(
+    name = "v1alpha3_cue_instance",
+    package_name = "v1alpha3",
+    srcs = [
+        "doc_go_gen.cue",
+        "register_go_gen.cue",
+        "types_go_gen.cue",
+    ],
+    ancestor = "//test/testdata/gazelle/cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//test/testdata/gazelle/cue.mod/gen/k8s.io/api/core/v1:v1_cue_instance",
+        "//test/testdata/gazelle/cue.mod/gen/k8s.io/apimachinery/pkg/api/resource:resource_cue_instance",
+        "//test/testdata/gazelle/cue.mod/gen/k8s.io/apimachinery/pkg/apis/meta/v1:v1_cue_instance",
+        "//test/testdata/gazelle/cue.mod/gen/k8s.io/apimachinery/pkg/runtime:runtime_cue_instance",
+        "//test/testdata/gazelle/cue.mod/gen/k8s.io/apimachinery/pkg/types:types_cue_instance",
+    ],
+)
+
+cue_consolidated_instance(
+    name = "v1alpha3_cue_def",
+    instance = ":v1alpha3_cue_instance",
+    output_format = "cue",
+    visibility = ["//visibility:public"],
+)
+
+cue_exported_instance(
+    name = "v1alpha3_cue_instance_exported",
+    instance = ":v1alpha3_cue_instance",
+    output_format = "json",
+    visibility = ["//visibility:public"],
+)

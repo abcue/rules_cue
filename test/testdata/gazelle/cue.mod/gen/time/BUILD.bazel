@@ -1,0 +1,29 @@
+load("@rules_cue//cue:cue.bzl", "cue_consolidated_instance", "cue_exported_instance", "cue_instance")
+
+cue_instance(
+    name = "time_cue_instance",
+    package_name = "time",
+    srcs = [
+        "format_go_gen.cue",
+        "hack.cue",
+        "time_go_gen.cue",
+        "zoneinfo_go_gen.cue",
+        "zoneinfo_read_go_gen.cue",
+    ],
+    ancestor = "//test/testdata/gazelle/cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+)
+
+cue_consolidated_instance(
+    name = "time_cue_def",
+    instance = ":time_cue_instance",
+    output_format = "cue",
+    visibility = ["//visibility:public"],
+)
+
+cue_exported_instance(
+    name = "time_cue_instance_exported",
+    instance = ":time_cue_instance",
+    output_format = "json",
+    visibility = ["//visibility:public"],
+)

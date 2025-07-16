@@ -3,6 +3,10 @@ load(
     "paths",
 )
 load(
+    "@bazel_skylib//rules:diff_test.bzl",
+    "diff_test",
+)
+load(
     "@rules_shell//shell:sh_binary.bzl",
     "sh_binary",
 )
@@ -166,7 +170,7 @@ def _add_common_instance_consuming_attrs_to(attrs):
     attrs.update({
         "instance": attr.label(
             doc = """CUE instance to export.
- 
+
 This value must refer either to a target using the cue_instance rule
 or another rule that yields a CUEInstanceInfo provider.""",
             providers = [CUEInstanceInfo],
@@ -500,7 +504,7 @@ _cue_instance_runfiles = rule(
     attrs = _add_common_source_consuming_attrs_to({
         "instance": attr.label(
             doc = """CUE instance to export.
- 
+
 This value must refer either to a target using the cue_instance rule
 or another rule that yields a CUEInstanceInfo provider.""",
             providers = [CUEInstanceInfo],
@@ -578,6 +582,14 @@ def _make_instance_consuming_action(ctx, cue_subcommand, mnemonic, description, 
         relative_instance_path = "."
     else:
         relative_instance_path = "./" + relative_instance_path
+
+    prefixes = ["./cue.mod/pkg/", "./cue.mod/usr/", "./cue.mod/gen/"]
+    for prefix in prefixes:
+        if relative_instance_path.startswith(prefix):
+            remaining_path = relative_instance_path[len(prefix):]
+            if "." in remaining_path:
+                relative_instance_path = remaining_path
+                break
 
     _make_output_producing_action(
         ctx,
@@ -779,6 +791,8 @@ def cue_consolidated_instance(name, **kwargs):
         **kwargs
     )
 
+cue_def = cue_consolidated_instance
+
 def _augment_exported_output_args(ctx, args):
     if ctx.attr.escape:
         args.add("--escape")
@@ -884,4 +898,42 @@ def cue_exported_instance(name, **kwargs):
             _prepare_exported_output_rule,
         ],
         **kwargs
+    )
+
+cue_export = cue_exported_instance
+
+def cue_gen_golden(name, srcs):
+    """Generates exports_files rule for golden files.
+
+    Args:
+        name: Name of the target.
+        srcs: List of golden files to export.
+    """
+    native.exports_files(srcs)
+
+def cue_test(name, generated_output_file, golden_file = None):
+    """Creates a test that compares a generated CUE output file against a golden file.
+
+    Args:
+        name: Name of the test target.
+        generated_output_file: The CUE output file to test, typically produced by cue_export or similar.
+        golden_file: Optional. Path to golden/expected output file to compare against. If not provided,
+            will be inferred from generated_output_file by replacing the extension with "golden{extension}".
+    """
+    if not golden_file:
+        base, extension = paths.split_extension(generated_output_file)
+        parts = base.rpartition(":")
+        if parts[1] == ":":
+            base = parts[0]
+            golden_basename_prefix = parts[2] + "-"
+        else:
+            base = parts[2]
+            golden_basename_prefix = ""
+        golden_file = "{}:{}golden{}".format(base, golden_basename_prefix, extension)
+
+    diff_test(
+        name = name + "_test",
+        file1 = generated_output_file,
+        file2 = golden_file,
+        size = "small",
     )

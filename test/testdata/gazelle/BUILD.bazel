@@ -1,0 +1,34 @@
+#gazelle:prefix example.com
+#gazelle:cue_test_golden_suffix -golden.json
+
+load("@rules_cue//cue:cmd.bzl", "cue_cmd")
+load("@rules_cue//cue:cue.bzl", "cue_consolidated_instance", "cue_exported_instance", "cue_instance")
+
+cue_instance(
+    name = "gazelle_cue_instance",
+    package_name = "gazelle",
+    srcs = ["app.cue"],
+    ancestor = "//test/testdata/gazelle/cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+    deps = ["//test/testdata/gazelle/cue.mod/gen/k8s.io/api/apps/v1:v1_cue_instance"],
+)
+
+cue_consolidated_instance(
+    name = "gazelle_cue_def",
+    instance = ":gazelle_cue_instance",
+    output_format = "cue",
+    visibility = ["//visibility:public"],
+)
+
+cue_cmd(
+    name = "cue_cmd",
+    cmd = "",
+    visibility = ["//visibility:public"],
+)
+
+cue_exported_instance(
+    name = "gazelle_cue_instance_exported",
+    instance = ":gazelle_cue_instance",
+    output_format = "json",
+    visibility = ["//visibility:public"],
+)

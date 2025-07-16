@@ -1,0 +1,29 @@
+load("@rules_cue//cue:cue.bzl", "cue_consolidated_instance", "cue_exported_instance", "cue_instance")
+
+cue_instance(
+    name = "types_cue_instance",
+    package_name = "types",
+    srcs = [
+        "doc_go_gen.cue",
+        "namespacedname_go_gen.cue",
+        "nodename_go_gen.cue",
+        "patch_go_gen.cue",
+        "uid_go_gen.cue",
+    ],
+    ancestor = "//test/testdata/gazelle/cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+)
+
+cue_consolidated_instance(
+    name = "types_cue_def",
+    instance = ":types_cue_instance",
+    output_format = "cue",
+    visibility = ["//visibility:public"],
+)
+
+cue_exported_instance(
+    name = "types_cue_instance_exported",
+    instance = ":types_cue_instance",
+    output_format = "json",
+    visibility = ["//visibility:public"],
+)

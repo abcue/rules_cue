@@ -6,6 +6,7 @@ load(
 exports_files([
     "cue-run-from-archived-runfiles",
     "cue-run-from-runfiles",
+    "cmd.sh.tpl",
 ])
 
 cue_config(

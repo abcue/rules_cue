@@ -103,6 +103,8 @@ elif [ -z "${HOME:-}" ]; then
   export CUE_CACHE_DIR="${cue_cache_directory}"
 fi
 
+export CUE_DEBUG=sortfields
+
 # NB: See https://stackoverflow.com/questions/7577052 for the odd
 # treatment of the "packageless_file_args" array variable here,
 # handling the case where the array winds up empty for lack of

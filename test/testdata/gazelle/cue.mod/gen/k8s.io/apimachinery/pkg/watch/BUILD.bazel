@@ -1,0 +1,30 @@
+load("@rules_cue//cue:cue.bzl", "cue_consolidated_instance", "cue_exported_instance", "cue_instance")
+
+cue_instance(
+    name = "watch_cue_instance",
+    package_name = "watch",
+    srcs = [
+        "doc_go_gen.cue",
+        "filter_go_gen.cue",
+        "mux_go_gen.cue",
+        "streamwatcher_go_gen.cue",
+        "watch_go_gen.cue",
+    ],
+    ancestor = "//test/testdata/gazelle/cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+    deps = ["//test/testdata/gazelle/cue.mod/gen/k8s.io/apimachinery/pkg/runtime:runtime_cue_instance"],
+)
+
+cue_consolidated_instance(
+    name = "watch_cue_def",
+    instance = ":watch_cue_instance",
+    output_format = "cue",
+    visibility = ["//visibility:public"],
+)
+
+cue_exported_instance(
+    name = "watch_cue_instance_exported",
+    instance = ":watch_cue_instance",
+    output_format = "json",
+    visibility = ["//visibility:public"],
+)

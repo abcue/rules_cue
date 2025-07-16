@@ -1,0 +1,23 @@
+load("@rules_cue//cue:cue.bzl", "cue_consolidated_instance", "cue_exported_instance", "cue_instance")
+
+cue_instance(
+    name = "kue_cue_instance",
+    package_name = "kue",
+    srcs = ["kue.cue"],
+    ancestor = "//test/testdata/gazelle/cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+)
+
+cue_consolidated_instance(
+    name = "kue_cue_def",
+    instance = ":kue_cue_instance",
+    output_format = "cue",
+    visibility = ["//visibility:public"],
+)
+
+cue_exported_instance(
+    name = "kue_cue_instance_exported",
+    instance = ":kue_cue_instance",
+    output_format = "json",
+    visibility = ["//visibility:public"],
+)
