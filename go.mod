@@ -1,4 +1,4 @@
-module github.com/seh/rules_cue
+module github.com/abc-dp/rules_cue
 
 go 1.22.12
 
