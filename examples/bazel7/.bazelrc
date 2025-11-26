@@ -1,0 +1,4 @@
+# Disable Bazel Modules. No-op in Bazel 6 as this is the default but Bazel 7 enables them by default.
+build --noenable_bzlmod
+query --noenable_bzlmod
+fetch --noenable_bzlmod
