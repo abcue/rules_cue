@@ -25,3 +25,8 @@ runs:
         --test_output=errors \
         //...
     shell: bash
+  - name: Test Bazel 7 targets
+    run: |
+      cd examples/bazel7
+      ./tools/cue/test.sh
+    shell: bash
