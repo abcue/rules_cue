@@ -14,11 +14,6 @@ local_repository(
     path = "../..",
 )
 
-load("@rules_cue//cue:toolchain.bzl", "cue_tool")
+load("@rules_cue//cue:deps.bzl", "cue_register_toolchains")
 
-cue_tool(
-    name = "cue_tool",
-    version = "v0.15.1",
-)
-
-register_toolchains("@cue_tool_toolchains//:all")
+cue_register_toolchains(version = "v0.15.1")
