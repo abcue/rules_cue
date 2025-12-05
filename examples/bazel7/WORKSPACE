@@ -1,0 +1,19 @@
+workspace(name = "bazel7")
+
+# load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# http_archive(
+#     name = "rules_cue",
+#     sha256 = "22eee0fbce6274af199421d3192f403da171d90b4193ed36513669f7615ccd0c",
+#     strip_prefix = "rules_cue-0.15.0",
+#     url = "https://github.com/seh/rules_cue/releases/download/v0.15.0/vcs-archive-v0.15.0.tar.gz",
+# )
+
+local_repository(
+    name = "rules_cue",
+    path = "../..",
+)
+
+load("@rules_cue//cue:deps.bzl", "cue_register_toolchains")
+
+cue_register_toolchains(version = "v0.15.1")
