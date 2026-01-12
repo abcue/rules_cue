@@ -1,0 +1,5 @@
+"""Build configuration for cuefmt validation tools."""
+
+exports_files([
+    "defs.bzl",
+])
