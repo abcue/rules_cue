@@ -3,6 +3,14 @@
 visibility("public")
 
 _TOOLS_BY_RELEASE = {
+    "v0.15.4": {
+        struct(os = "darwin", arch = "amd64"): "e64e6a9f30609ed619a203334a6404c46a9fb7685a86424f74c3c52a55ebfa1c",
+        struct(os = "darwin", arch = "arm64"): "2d324ba027447a7dab2e980f3ccfb7e15a3dd9096258b9f69205153e4c5b46cd",
+        struct(os = "linux", arch = "amd64"): "4709f0d3e9988b82192a205953fefdbb3637317a1cef63d84fe65b7b92ef95a3",
+        struct(os = "linux", arch = "arm64"): "f5a47ef6a6566849543b0ea84a7058c690bbb1492a1c101a6d62feaf59f8112e",
+        struct(os = "windows", arch = "amd64"): "d42e26a0fb09219fc1735326fb2188dadf7c8deab136698a55d793c0c15a6aaa",
+        struct(os = "windows", arch = "arm64"): "a19ce1f517879b1bb3f5cb815364a2ec74b0302b54a86f5802a2c56ae3b7ba97",
+    },
     "v0.15.3": {
         struct(os = "darwin", arch = "amd64"): "44f177363bb59453371d9bf3dd2097c6bd7fc0fccb2eaf2cfde8bc934c8ba174",
         struct(os = "darwin", arch = "arm64"): "9b84bbd0ef1050b51328e4d9af47b2e88c772765d5c74594277417a4bc083a68",
@@ -51,33 +59,9 @@ _TOOLS_BY_RELEASE = {
         struct(os = "windows", arch = "amd64"): "9041f014820924e4fde7bb2c295f4da63e9ad6590f92d73e6c4bc37abe5f2077",
         struct(os = "windows", arch = "arm64"): "045878cf337143b54ccaff2718c4dd2431922ad53182a17d088e7a3d731b032b",
     },
-    "v0.13.2": {
-        struct(os = "darwin", arch = "amd64"): "5e125159a49524b7bb481285c890821fc98b11411f0b84c13691821897a2ab24",
-        struct(os = "darwin", arch = "arm64"): "d098864d07e03499351aef0010901efea2770284664273445aaa5417c21b8e2d",
-        struct(os = "linux", arch = "amd64"): "a3a48787bdf5d4ffa8ce36d5a015e2badc5963eebb578fdefea3befc9e4befb9",
-        struct(os = "linux", arch = "arm64"): "999e81961cf4f3d5eaeb886413d9e36dca064e7f0578f95029545bfccd1a6e7a",
-        struct(os = "windows", arch = "amd64"): "9c5513c5bbae3aab5b906611e8e487a999bfb69851ed3267d4ff3c488269c271",
-        struct(os = "windows", arch = "arm64"): "b97ac155f753ff58633ec50985ff5ba90c719a5f1fbc59ea2b84e6ce2c026555",
-    },
-    "v0.13.1": {
-        struct(os = "darwin", arch = "amd64"): "6e2a853b15e018a55f9f51a54c4410f1f7815d77a2832911e9ffacaeedb1cb0f",
-        struct(os = "darwin", arch = "arm64"): "5b4936a0a1ed739ab862c04a3700a5b5119d40ce0e15f7b403641486a36a1633",
-        struct(os = "linux", arch = "amd64"): "74e84f705af23d521895acfcd782bd75457616b6ce9507525345c6941e295c1a",
-        struct(os = "linux", arch = "arm64"): "33ac30f7183fe72c913981a97b6de0c7d9a49555155dcca0fb85345125ad75b7",
-        struct(os = "windows", arch = "amd64"): "934f10f81e3fea059594029c84fd0ae49c4d746f463654daf4a06c10b0a369b0",
-        struct(os = "windows", arch = "arm64"): "4d6df90a83e6be1ef8eef997877df6bcafb9b97763a303b962d2815b92560516",
-    },
-    "v0.13.0": {
-        struct(os = "darwin", arch = "amd64"): "a31d34e22a9c3082fbfaaa9a9b8ef92085b4cbd95090cc67efc2e4fb501e2030",
-        struct(os = "darwin", arch = "arm64"): "d70bcd278b8b20c78d550fa6a59da88b5fa65688ff3e8fc32a5aeec39aa4868a",
-        struct(os = "linux", arch = "amd64"): "59ba96137da07cd2cdd2e17ec33af81f850126f022f25dd96516f0b42071b6a9",
-        struct(os = "linux", arch = "arm64"): "59dcf4af25bf872decb44e2a706d75f822b32bbd06e83252cd181a177957ad00",
-        struct(os = "windows", arch = "amd64"): "a17423528e176f984ae4778fe5c757955783985913a8e18d6ccc663eaf91c279",
-        struct(os = "windows", arch = "arm64"): "fef57df2265c9ce92426ea698c9bf38e053f6b579a5f7cf1b8963926252aac00",
-    },
 }
 
-_DEFAULT_TOOL_VERSION = "v0.15.3"
+_DEFAULT_TOOL_VERSION = "v0.15.4"
 
 def known_release_versions():
     return _TOOLS_BY_RELEASE.keys()
