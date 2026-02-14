@@ -1,6 +1,6 @@
 module github.com/seh/rules_cue
 
-go 1.24.0
+go 1.25.6
 
 require (
 	cuelang.org/go v0.15.1
