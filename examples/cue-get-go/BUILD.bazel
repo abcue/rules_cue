@@ -1,4 +1,5 @@
 load("@gazelle//:def.bzl", "gazelle")
+load("@rules_cue//cue:cue.bzl", "cue_instance")
 
 # gazelle:prefix github.com/abcue/rules_cue/examples/cue-get-go
 
@@ -29,4 +30,13 @@ gazelle(
     ],
     command = "update-repos",
     gazelle = "@rules_cue//gazelle:gazelle_binary",
+)
+
+cue_instance(
+    name = "cuegetgo_cue_instance",
+    package_name = "cuegetgo",
+    srcs = ["k8s.cue"],
+    ancestor = ":cuegetgo_cue_instance",
+    visibility = ["//visibility:public"],
+    deps = ["//cue.mod/gen/k8s.io/api/core/v1:v1_cue_instance"],
 )

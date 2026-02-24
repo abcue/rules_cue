@@ -1,0 +1,9 @@
+load("@rules_cue//cue:cue.bzl", "cue_instance")
+
+cue_instance(
+    name = "intstr_cue_instance",
+    package_name = "intstr",
+    srcs = ["intstr_go_gen.cue"],
+    ancestor = "//cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+)

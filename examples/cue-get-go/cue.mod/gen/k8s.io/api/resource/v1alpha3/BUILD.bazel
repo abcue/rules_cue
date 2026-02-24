@@ -1,0 +1,14 @@
+load("@rules_cue//cue:cue.bzl", "cue_instance")
+
+cue_instance(
+    name = "v1alpha3_cue_instance",
+    package_name = "v1alpha3",
+    srcs = [
+        "doc_go_gen.cue",
+        "register_go_gen.cue",
+        "types_go_gen.cue",
+    ],
+    ancestor = "//cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+    deps = ["//cue.mod/gen/k8s.io/apimachinery/pkg/apis/meta/v1:v1_cue_instance"],
+)

@@ -1,0 +1,25 @@
+load("@rules_cue//cue:cue.bzl", "cue_instance")
+
+cue_instance(
+    name = "v1_cue_instance",
+    package_name = "v1",
+    srcs = [
+        "duration_go_gen.cue",
+        "group_version_go_gen.cue",
+        "helpers_go_gen.cue",
+        "meta_go_gen.cue",
+        "micro_time_go_gen.cue",
+        "register_go_gen.cue",
+        "time_go_gen.cue",
+        "time_proto_go_gen.cue",
+        "types_go_gen.cue",
+        "watch_go_gen.cue",
+    ],
+    ancestor = "//cue.mod:cue.mod",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cue.mod/gen/k8s.io/apimachinery/pkg/runtime:runtime_cue_instance",
+        "//cue.mod/gen/k8s.io/apimachinery/pkg/types:types_cue_instance",
+        "//cue.mod/gen/k8s.io/apimachinery/pkg/watch:watch_cue_instance",
+    ],
+)
