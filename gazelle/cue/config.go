@@ -32,7 +32,7 @@ type cueConfig struct {
 
 	// cueGenExportedInstance controls whether to generate cue_exported_instance rules
 	// for each cue_instance. When true, a corresponding cue_exported_instance rule will be created.
-	// #gazelle:cue_exported_instance
+	// #gazelle:cue_gen_exported_instance
 	cueGenExportedInstance bool
 
 	// cueGenConsolidatedInstance controls whether to generate cue_consolidated_instance rules
@@ -122,9 +122,9 @@ func (s *cueLang) Configure(c *config.Config, rel string, f *rule.File) {
 				conf.cueTestGoldenFilename = d.Value
 				conf.cueTestGoldenSuffix = strings.TrimPrefix(path.Ext(d.Value), ".")
 			case "cue_gen_exported_instance":
-				conf.cueGenExportedInstance = true
+				conf.cueGenExportedInstance = d.Value != "false"
 			case "cue_gen_consolidated_instance":
-				conf.cueGenConsolidatedInstance = true
+				conf.cueGenConsolidatedInstance = d.Value != "false"
 			case "cue_output_format":
 				conf.cueOutputFormat = d.Value
 			}
