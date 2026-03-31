@@ -1,6 +1,7 @@
 load("@gazelle//:def.bzl", "gazelle")
 
 # gazelle:prefix github.com/abcue/rules_cue/examples/gazelle
+# gazelle:cue_gen_consolidated_instance
 
 # Run this to update BUILD.bazel files:
 # bazel run //:gazelle

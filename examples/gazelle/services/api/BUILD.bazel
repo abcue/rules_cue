@@ -1,5 +1,7 @@
 load("@rules_cue//cue:cue.bzl", "cue_consolidated_instance", "cue_instance")
 
+# gazelle:cue_gen_consolidated_instance false
+
 cue_instance(
     name = "api_cue_instance",
     package_name = "api",

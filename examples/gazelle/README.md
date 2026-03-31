@@ -203,6 +203,12 @@ You can customize Gazelle behavior using directives in BUILD.bazel files:
 # Control output format for CUE exports (json, yaml, text, or cue)
 # gazelle:cue_output_format yaml
 
+# Generate cue_consolidated_instance rules (opt-in)
+# gazelle:cue_gen_consolidated_instance
+
+# Disable in a subdirectory
+# gazelle:cue_gen_consolidated_instance false
+
 # Generate cue_exported_instance rules
 # gazelle:cue_gen_exported_instance
 
