@@ -61,7 +61,7 @@ func (cl *cueLang) GenerateRules(args language.GenerateArgs) language.GenerateRe
 		consolidatedInstances:    make(map[string]*cueConsolidatedInstance),
 		exportedGoldenFiles:      make(map[string]*GoldenFile), // key: filename
 		cueTestRules:             make(map[string]*cueTest),
-		genConsolidatedInstances: true,
+		genConsolidatedInstances: conf.cueGenConsolidatedInstance,
 		genExportedInstances:     conf.cueGenExportedInstance,
 	}
 

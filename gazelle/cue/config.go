@@ -31,9 +31,14 @@ type cueConfig struct {
 	cueTestGoldenFilename string
 
 	// cueGenExportedInstance controls whether to generate cue_exported_instance rules
-	// for each cue_instance. When true, a corresponding cue_exported_instance rule will be created.
-	// #gazelle:cue_exported_instance
+	// for each cue_instance. When not false, a corresponding cue_exported_instance rule will be created.
+	// #gazelle:cue_gen_exported_instance
 	cueGenExportedInstance bool
+
+	// cueGenConsolidatedInstance controls whether to generate cue_consolidated_instance rules
+	// for each cue_instance. When not false, a corresponding cue_consolidated_instance rule will be created.
+	// #gazelle:cue_gen_consolidated_instance
+	cueGenConsolidatedInstance bool
 
 	// cueOutputFormat specifies the output format for CUE exports.
 	// Valid values are "json", "yaml", and "text".
@@ -45,7 +50,7 @@ type cueConfig struct {
 // Configurer can interpret. Gazelle prints errors for directives that
 // are not recognized by any Configurer.
 func (s *cueLang) KnownDirectives() []string {
-	return []string{"prefix", "cue_test_golden_suffix", "cue_test_golden_filename", "cue_output_format", "cue_gen_exported_instance"}
+	return []string{"prefix", "cue_test_golden_suffix", "cue_test_golden_filename", "cue_output_format", "cue_gen_exported_instance", "cue_gen_consolidated_instance"}
 }
 
 // RegisterFlags registers command-line flags used by the
@@ -117,7 +122,9 @@ func (s *cueLang) Configure(c *config.Config, rel string, f *rule.File) {
 				conf.cueTestGoldenFilename = d.Value
 				conf.cueTestGoldenSuffix = strings.TrimPrefix(path.Ext(d.Value), ".")
 			case "cue_gen_exported_instance":
-				conf.cueGenExportedInstance = true
+				conf.cueGenExportedInstance = d.Value != "false"
+			case "cue_gen_consolidated_instance":
+				conf.cueGenConsolidatedInstance = d.Value != "false"
 			case "cue_output_format":
 				conf.cueOutputFormat = d.Value
 			}
