@@ -31,12 +31,12 @@ type cueConfig struct {
 	cueTestGoldenFilename string
 
 	// cueGenExportedInstance controls whether to generate cue_exported_instance rules
-	// for each cue_instance. When true, a corresponding cue_exported_instance rule will be created.
+	// for each cue_instance. When not false, a corresponding cue_exported_instance rule will be created.
 	// #gazelle:cue_gen_exported_instance
 	cueGenExportedInstance bool
 
 	// cueGenConsolidatedInstance controls whether to generate cue_consolidated_instance rules
-	// for each cue_instance. When true, a corresponding cue_consolidated_instance rule will be created.
+	// for each cue_instance. When not false, a corresponding cue_consolidated_instance rule will be created.
 	// #gazelle:cue_gen_consolidated_instance
 	cueGenConsolidatedInstance bool
 
