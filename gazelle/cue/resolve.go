@@ -315,6 +315,12 @@ func (cl *cueLang) Resolve(c *config.Config, ix *resolve.RuleIndex, rc *repo.Rem
 			log.Printf("DEBUG Resolve: kind: %s, cueModule: %s, import_path: %s\n", r.Kind(), cueModule, imp)
 		}
 
+		if dep, ok := resolve.FindRuleWithOverride(c, resolve.ImportSpec{Lang: cueName, Imp: imp}, cueName); ok {
+			dep = dep.Rel(from.Repo, from.Pkg)
+			depSet[dep.String()] = true
+			continue
+		}
+
 		// Stage 1: Try to find the import in cue.mod indexes
 		if resolved := tryResolveFromModuleIndex(imp, cueModule, depSet, debugModIndex); resolved {
 			continue
