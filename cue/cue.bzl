@@ -41,6 +41,10 @@ def _replacer_if_stamping(stamping_policy):
 
 def _add_common_source_consuming_attrs_to(attrs):
     attrs.update({
+        "embedsrcs": attr.label_list(
+            doc = "Input files made available for embedding via the `@embed` attribute.",
+            allow_files = True,
+        ),
         "qualified_srcs": attr.label_keyed_string_dict(
             doc = """Additional input files that are not part of a CUE package, each together with a qualifier.
 
@@ -188,13 +192,13 @@ def _file_from_label_keyed_string_dict_key(k):
     # label_list attribute.
     files = k.files.to_list()
     if len(files) != 1:
-        fail(msg = "Unexpected number of files in target {}: {}".format(k, len(files)))
+        fail("Unexpected number of files in target {}: {}".format(k, len(files)))
     return files[0]
 
 def _collect_packageless_file_path(ctx, file, lines):
     p = _runfile_path(ctx, file)
     if p.find(":") != -1:
-        fail(msg = "CUE rejects file paths that contain a colon (:): {}".format(p))
+        fail("CUE rejects file paths that contain a colon (:): {}".format(p))
     lines.append(p + "\n")
 
 def _add_common_output_producing_args_to(ctx, args, stamped_args_file, packageless_files_file):
@@ -206,7 +210,7 @@ def _add_common_output_producing_args_to(ctx, args, stamped_args_file, packagele
         args.add("--expression", ctx.attr.expression)
     for k, v in ctx.attr.inject.items():
         if len(k) == 0:
-            fail(msg = "injected key must not empty")
+            fail("injected key must not empty")
         if stamping_enabled and v.startswith("{") and v.endswith("}"):
             required_stamp_bindings[k] = v[1:-1]
             continue
@@ -217,7 +221,7 @@ def _add_common_output_producing_args_to(ctx, args, stamped_args_file, packagele
         )
     for v in ctx.attr.inject_shorthand:
         if len(v) == 0:
-            fail(msg = "injected value must not empty")
+            fail("injected value must not empty")
         args.add("--inject", v)
     if ctx.attr.concatenate_objects:
         args.add("--list")
@@ -231,7 +235,7 @@ def _add_common_output_producing_args_to(ctx, args, stamped_args_file, packagele
         args.add("--package", ctx.attr.non_cue_file_package_name)
     for p in ctx.attr.path:
         if not p:
-            fail(msg = "path element must not be empty")
+            fail("path element must not be empty")
         args.add("--path", p)
     if ctx.attr.with_context:
         args.add("--with-context")
@@ -290,17 +294,17 @@ def _cue_module_impl(ctx):
     module_file = ctx.file.file
     expected_module_file = "module.cue"
     if module_file.basename != expected_module_file:
-        fail(msg = """supplied CUE module file is not named "{}"; got "{}" instead""".format(expected_module_file, module_file.basename))
+        fail("""supplied CUE module file is not named "{}"; got "{}" instead""".format(expected_module_file, module_file.basename))
     expected_module_directory = "cue.mod"
 
     directory = paths.basename(module_file.dirname)
     if directory != expected_module_directory:
-        fail(msg = """supplied CUE module directory is not named "{}"; got "{}" instead""".format(expected_module_directory, directory))
+        fail("""supplied CUE module directory is not named "{}"; got "{}" instead""".format(expected_module_directory, directory))
     return [
         CUEModuleInfo(
             module_file = module_file,
             external_package_sources = depset(
-                direct = ctx.files.srcs,
+                direct = ctx.files.embedsrcs + ctx.files.srcs,
             ),
         ),
     ]
@@ -312,6 +316,10 @@ _cue_module = rule(
             doc = "module.cue file for this CUE module.",
             allow_single_file = [".cue"],
             mandatory = True,
+        ),
+        "embedsrcs": attr.label_list(
+            doc = "Input files made available for embedding via the `@embed` attribute.",
+            allow_files = True,
         ),
         "srcs": attr.label_list(
             doc = """Source files defining external packages from the "gen," "pkg," and "usr" directories.""",
@@ -349,7 +357,7 @@ def _cue_instance_impl(ctx):
         for dep in ctx.attr.deps:
             instance = dep[CUEInstanceInfo]
             if instance.module != module:
-                fail(msg = """dependency {} of instance {} is not part of CUE module "{}"; got "{}" instead""".format(dep, ctx.label, module, dep.module))
+                fail("""dependency {} of instance {} is not part of CUE module "{}"; got "{}" instead""".format(dep, ctx.label, module, dep.module))
 
     instance_directory_path = _cue_instance_directory_path(ctx)
     module_root_directory = _cue_module_root_directory_path(ctx, module)
@@ -357,7 +365,7 @@ def _cue_instance_impl(ctx):
             # The CUE module may be at the root of the Bazel workspace.
             not module_root_directory or
             instance_directory_path.startswith(module_root_directory + "/")):
-        fail(msg = "directory {} for instance {} is not dominated by the module root directory {}".format(
+        fail("directory {} for instance {} is not dominated by the module root directory {}".format(
             instance_directory_path,
             ctx.label,
             module_root_directory,
@@ -365,11 +373,15 @@ def _cue_instance_impl(ctx):
     return [
         CUEInstanceInfo(
             directory_path = instance_directory_path,
+            # NB: Omit the "embedsrcs" attribute's contribution here
+            # deliberately, and include those files only in the
+            # "transitive_files" depset as direct dependencies.
             files = ctx.files.srcs,
             module = module,
             package_name = ctx.attr.package_name or paths.basename(instance_directory_path),
             transitive_files = depset(
-                direct = ctx.files.srcs +
+                direct = ctx.files.embedsrcs +
+                         ctx.files.srcs +
                          ([module.module_file] if not ancestor_instance else []),
                 transitive = [instance.transitive_files for instance in (
                                  [dep[CUEInstanceInfo] for dep in ctx.attr.deps] +
@@ -411,11 +423,15 @@ If left unspecified, use the directory containing the first CUE file
 nominated in this cue_instance's "srcs" attribute.""",
             allow_single_file = True,
         ),
+        "embedsrcs": attr.label_list(
+            doc = "Input files made available for embedding via the `@embed` attribute.",
+            allow_files = True,
+        ),
         "package_name": attr.string(
             doc = """Name of the CUE package to load for this instance.
 
 If left unspecified, use the basename of the containing directory as
-the CUE pacakge name.""",
+the CUE package name.""",
         ),
         "srcs": attr.label_list(
             doc = "CUE input files that are part of the nominated CUE package.",
@@ -438,7 +454,8 @@ def _call_rule_after(name, rule_fn, prepare_fns = [], **kwargs):
     )
 
 def _collect_direct_file_sources(ctx):
-    files = list(ctx.files.srcs)
+    files = list(ctx.files.embedsrcs)
+    files.extend(ctx.files.srcs)
     for k, _ in ctx.attr.qualified_srcs.items():
         file = _file_from_label_keyed_string_dict_key(k)
         if file not in files:
@@ -533,9 +550,9 @@ def _make_output_producing_action(ctx, cue_subcommand, mnemonic, description, au
             if instance_package_name:
                 args.add("-p", instance_package_name)
     elif instance_directory_path:
-        fail(msg = "CUE instance directory path provided without a module directory path")
+        fail("CUE instance directory path provided without a module directory path")
     elif instance_package_name:
-        fail(msg = "CUE package name provided without an instance directory path")
+        fail("CUE package name provided without an instance directory path")
     if cue_cache_directory_path:
         args.add("-c", cue_cache_directory_path)
     args.add(cue_tool.path)
@@ -670,6 +687,7 @@ def _prepare_consolidated_output_rule(name, **kwargs):
 
 def _prepare_module_consuming_rule(name, **kwargs):
     deps = kwargs.get("deps", [])
+    embedsrcs = kwargs.get("embedsrcs", [])
     module = kwargs["module"]
     qualified_srcs = kwargs.get("qualified_srcs", {})
     srcs = kwargs.get("srcs", [])
@@ -679,6 +697,7 @@ def _prepare_module_consuming_rule(name, **kwargs):
     _cue_module_runfiles(
         name = runfiles_name,
         deps = deps,
+        embedsrcs = embedsrcs,
         module = module,
         srcs = srcs,
         qualified_srcs = qualified_srcs,
@@ -690,6 +709,7 @@ def _prepare_module_consuming_rule(name, **kwargs):
 
 def _prepare_instance_consuming_rule(name, **kwargs):
     instance = kwargs["instance"]
+    embedsrcs = kwargs.get("embedsrcs", [])
     qualified_srcs = kwargs.get("qualified_srcs", {})
     srcs = kwargs.get("srcs", [])
     tags = kwargs.get("tags", [])
@@ -697,6 +717,7 @@ def _prepare_instance_consuming_rule(name, **kwargs):
     runfiles_name = name + "_cue_runfiles"
     _cue_instance_runfiles(
         name = runfiles_name,
+        embedsrcs = embedsrcs,
         instance = instance,
         srcs = srcs,
         qualified_srcs = qualified_srcs,
@@ -707,6 +728,7 @@ def _prepare_instance_consuming_rule(name, **kwargs):
     }
 
 def _prepare_standalone_rule(name, **kwargs):
+    embedsrcs = kwargs.get("embedsrcs", [])
     qualified_srcs = kwargs.get("qualified_srcs", {})
     srcs = kwargs.get("srcs", [])
     tags = kwargs.get("tags", [])
@@ -714,6 +736,7 @@ def _prepare_standalone_rule(name, **kwargs):
     runfiles_name = name + "_cue_runfiles"
     _cue_standalone_runfiles(
         name = runfiles_name,
+        embedsrcs = embedsrcs,
         srcs = srcs,
         qualified_srcs = qualified_srcs,
         tags = tags,

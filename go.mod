@@ -1,10 +1,10 @@
 module github.com/seh/rules_cue
 
-go 1.25.6
+go 1.26.2
 
 require (
 	cuelang.org/go v0.15.1
-	github.com/bazelbuild/bazel-gazelle v0.47.0
+	github.com/bazelbuild/bazel-gazelle v0.50.0
 	github.com/iancoleman/strcase v0.3.0
 )
 
