@@ -1,0 +1,2 @@
+build:cue_checks --aspects=//tools/cmd/cuefmt:defs.bzl%cuefmt_check_aspect --output_groups=+check_validation
+build:cue_checks_fix --config=cue_checks --define=CUE_CHECKS_FIX=1 --strategy=Cuefmt=local --output_groups=+check_validation
