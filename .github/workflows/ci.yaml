@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out VCS repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
     - name: Confirm Bazel files is formatted per "buildifier"
       uses: thompsonja/bazel-buildifier@v0.4.0
       with:
@@ -22,6 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out VCS repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
     - name: Build and test all Bazel targets
       uses: ./.github/actions/build-test

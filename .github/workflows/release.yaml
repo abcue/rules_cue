@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out VCS repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
     - name: Build and test all Bazel targets
       uses: ./.github/actions/build-test
     # Work around lack of the annotated tag for the motivating tag
